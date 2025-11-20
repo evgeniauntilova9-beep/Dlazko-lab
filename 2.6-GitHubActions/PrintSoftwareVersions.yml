@@ -1,49 +1,39 @@
 name: Print Software Versions
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-
-  data-processing-level:
+  data-processing-software:
     name: Data Processing Software Versions
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print Ubuntu version
+      - name: Print OS version (Ubuntu)
+        run: lsb_release -a || cat /etc/os-release
+
+      - name: Print PHP version (Laravel environment)
+        run: php -v
+
+      - name: Print Composer version
+        run: composer --version || echo "Composer not installed"
+
+      - name: Install TensorFlow Lite dependencies (Python)
         run: |
-          echo "=== Ubuntu version ==="
-          lsb_release -a || cat /etc/os-release
+          python3 --version
+          pip3 install tflite-runtime || echo "tflite-runtime not available for installation"
+          python3 -c "import tflite_runtime; print('TensorFlow Lite runtime version:', tflite_runtime.__version__)" || echo "Cannot import tflite_runtime"
 
-      - name: Install PHP (Laravel backend)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y php-cli
-          php -v
-
-      - name: Print Python version (TensorFlow Lite)
-        run: python3 --version
-
-      - name: Setup Node.js (Vue.js front-end)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Print Node.js & npm versions
-        run: |
-          node -v
-          npm -v
-
-  data-access-level:
+  database-software:
     name: Database Software Versions
-    needs: data-processing-level
+    needs: data-processing-software
     runs-on: ubuntu-latest
 
     steps:
       - name: Install PostgreSQL client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
       - name: Print PostgreSQL version
         run: psql --version
