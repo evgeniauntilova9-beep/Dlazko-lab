@@ -1,0 +1,49 @@
+name: Print Software Versions
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  data-processing-level:
+    name: Data Processing Software Versions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Ubuntu version
+        run: |
+          echo "=== Ubuntu version ==="
+          lsb_release -a || cat /etc/os-release
+
+      - name: Install PHP (Laravel backend)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y php-cli
+          php -v
+
+      - name: Print Python version (TensorFlow Lite)
+        run: python3 --version
+
+      - name: Setup Node.js (Vue.js front-end)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Print Node.js & npm versions
+        run: |
+          node -v
+          npm -v
+
+  data-access-level:
+    name: Database Software Versions
+    needs: data-processing-level
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Print PostgreSQL version
+        run: psql --version
