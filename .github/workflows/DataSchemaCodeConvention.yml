@@ -17,5 +17,4 @@ jobs:
         run: pip install sqlfluff
 
       - name: Lint SQL schema
-        run: sqlfluff lint 2.6-GitHubActions/DataSchema.sql --dialect postgres
-
+        run: sqlfluff lint 2.6-GitHubActions/DataSchemaModified.sql --dialect postgres
