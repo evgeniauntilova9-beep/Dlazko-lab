@@ -22,7 +22,7 @@ jobs:
         run: npm install --save-dev --save-exact @biomejs/biome
 
       - name: Lint ProgramCode.js
-        run: npx biome check 2.6-GitHubActions/ProgramCode.js
+        run: npx biome check ./2.6-GitHubActions/ProgramCode.js
 
       - name: Lint ProgramCodeModified.js (ignore fail)
-        run: npx biome check 2.6-GitHubActions/ProgramCodeModified.js || true
+        run: npx biome check ./2.6-GitHubActions/ProgramCodeModified.js || true
