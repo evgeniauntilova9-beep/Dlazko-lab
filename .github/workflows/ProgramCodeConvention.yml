@@ -1,0 +1,23 @@
+name: JS Code Convention
+
+on:
+  push:
+    branches:
+      - main
+      - laboratory-work-4
+
+jobs:
+  lint-js:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install BiomeJS
+        run: npm install -g @biomejs/cli
+
+      - name: Lint ProgramCode.js
+        run: biome check 2.6-GitHubActions/ProgramCode.js
+
+      - name: Lint ProgramCodeModified.js
+        run: biome check 2.6-GitHubActions/ProgramCodeModified.js || true
