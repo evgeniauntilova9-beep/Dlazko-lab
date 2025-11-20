@@ -13,11 +13,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install BiomeJS
-        run: npm install -g @biomejs/cli
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Biome
+        run: npm install --save-dev --save-exact @biomejs/biome
 
       - name: Lint ProgramCode.js
-        run: biome check 2.6-GitHubActions/ProgramCode.js
+        run: npx biome check ./2.6-GitHubActions/ProgramCode.js
 
-      - name: Lint ProgramCodeModified.js
-        run: biome check 2.6-GitHubActions/ProgramCodeModified.js || true
+      - name: Lint ProgramCodeModified.js (ignore fail)
+        run: npx biome check ./2.6-GitHubActions/ProgramCodeModified.js || true
