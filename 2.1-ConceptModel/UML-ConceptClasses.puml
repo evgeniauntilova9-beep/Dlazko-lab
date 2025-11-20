@@ -1,0 +1,64 @@
+@startuml
+
+' ==== КЛАСИ ====
+
+class User {
+    login
+    password
+    region
+}
+
+class Authorization {
+    method
+}
+
+class AirQuality {
+    currentValue
+}
+
+class AirQualityHistory {
+    previousValues
+}
+
+class Advice {
+    text
+}
+
+class Recommendation {
+    activityTips
+}
+
+class Notification {
+    message
+}
+
+class VoiceCourse {
+    difficultyLevel
+}
+
+class Training {
+    audioPlayback
+    pitchAccuracy
+}
+
+class GPSModule {
+    coordinates
+}
+
+' ==== ЗВʼЯЗКИ ==== 
+
+User "1" -- "1" Authorization : вводить/перевіряє
+User "1" -- "1" AirQuality : отримує
+AirQuality "1" o-- "*" AirQualityHistory : містить історію
+
+User "1" -- "*" Advice : переглядає
+User "1" -- "*" Recommendation : отримує рекомендації
+User "1" -- "*" Notification : отримує повідомлення
+
+User "1" -- "*" VoiceCourse : обирає курс
+VoiceCourse "1" o-- "*" Training : містить тренування
+Training "*" -- "1" User : оцінює інтонацію
+
+User "1" o-- "1" GPSModule : має
+
+@enduml

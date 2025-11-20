@@ -1,0 +1,92 @@
+@startuml
+title Relational Logical Schema — AirLoveSing
+
+hide circle
+
+' Примітка: первинні ключі (PK) та зовнішні ключі (FK) додані як технічна реалізація реляційної моделі.
+' У концептуальній моделі штучні атрибути не створювались; тут PK — для нормалізації та зв'язків.
+
+entity "User" as user {
+    (PK) user_id
+    login
+    password
+    region
+}
+
+entity "Authorization" as auth {
+    (PK) auth_id
+    method
+    (FK) user_id
+}
+
+entity "GPSModule" as gps {
+    (PK) gps_id
+    coordinates
+    (FK) user_id
+}
+
+entity "AirQuality" as aq {
+    (PK) aq_id
+    currentValue
+    region
+    timestamp
+}
+
+entity "AirQualityHistory" as aqh {
+    (PK) aqh_id
+    (FK) aq_id
+    previousValue
+    recordedAt
+}
+
+entity "Advice" as advice {
+    (PK) advice_id
+    text
+    (FK) user_id
+}
+
+entity "Recommendation" as rec {
+    (PK) rec_id
+    activityTips
+    (FK) user_id
+}
+
+entity "Notification" as notif {
+    (PK) notif_id
+    message
+    sentAt
+    (FK) user_id
+}
+
+entity "VoiceCourse" as course {
+    (PK) course_id
+    difficultyLevel
+}
+
+entity "Training" as training {
+    (PK) training_id
+    audioPlayback
+    pitchAccuracy
+    (FK) course_id
+    (FK) user_id
+}
+
+' Зв'язки (відображені у вигляді FK / композиції)
+user ||--o{ auth : has
+user ||--o{ gps  : owns
+user ||--o{ advice : receives
+user ||--o{ rec : receives
+user ||--o{ notif : receives
+user ||--o{ training : performs
+
+aq ||--o{ aqh : has_history
+course ||--o{ training : contains
+training }o--|| user : evaluated_by
+
+' Зауваження щодо multiplicity (логічне відображення):
+' - user (1) — auth (1..*) : користувач може мати 1 або більше методів авторизації
+' - user (1) — gps (0..1) : користувач може мати модуль GPS (на пристрої)
+' - user (1) — advice (*) : користувач може отримувати багато порад
+' - aq (1) — aqh (0..*) : запис історії для поточного показника
+
+@enduml
