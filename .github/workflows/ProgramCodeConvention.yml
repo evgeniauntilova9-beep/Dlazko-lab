@@ -10,14 +10,23 @@ jobs:
   lint-js:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install BiomeJS
-        run: npm install -g @biomejs/cli
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # або версія, яка потрібна
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup Biome CLI
+        uses: biomejs/setup-biome@v2
 
       - name: Lint ProgramCode.js
         run: biome check 2.6-GitHubActions/ProgramCode.js
 
-      - name: Lint ProgramCodeModified.js
+      - name: Lint ProgramCodeModified.js (ігноруємо помилки)
         run: biome check 2.6-GitHubActions/ProgramCodeModified.js || true
+
